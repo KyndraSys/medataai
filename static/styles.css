@@ -1,0 +1,139 @@
+body {
+    font-family: 'Liberation Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.navbar {
+    background-color: #FF0000;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s;
+}
+
+.navbar.scrolled {
+    background-color: #FFFFFF;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+.navbar.scrolled .logo {
+    color: #FFFFFF;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar ul li {
+    margin-left: 20px;
+}
+
+.navbar ul li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: all 0.3s;
+}
+
+.navbar ul li a.active {
+    background-color: #FFFFFF;
+    color: #FF0000;
+}
+
+.navbar ul li a:hover {
+    background-color: #FFFFFF;
+    color: #FF0000;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #FF0000;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.upload-section, .verify-section {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upload-section input[type="file"],
+.upload-section input[type="password"],
+.verify-section input[type="text"] {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #FF0000;
+    border-radius: 4px;
+}
+
+.upload-section input[type="submit"],
+.verify-section input[type="submit"] {
+    background-color: #FF0000;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-section input[type="submit"]:hover,
+.verify-section input[type="submit"]:hover {
+    background-color: #CC0000;
+}
+
+.error {
+    color: #FF0000;
+    margin-bottom: 10px;
+}
+
+.metadata {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.metadata p {
+    margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .navbar ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    .navbar ul li {
+        margin: 5px 0;
+    }
+    .container {
+        margin: 20px;
+        padding: 10px;
+    }
+}

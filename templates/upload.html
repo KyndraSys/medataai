@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDATA.ai - Upload Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Liberation+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MEDATA.ai</div>
+        <ul>
+            <li><a href="/" class="active">Upload</a></li>
+            <li><a href="/verify">Verify</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h2>Get verified with our MEDATA.ai wizard, just drop your PDF to verify authenticity.</h2>
+        <div class="upload-section">
+            <h3>Upload Document (Admin Only)</h3>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="error">
+                        {% for message in messages %}
+                            {{ message }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form method="post" enctype="multipart/form-data">
+                <label for="password">Admin Password:</label><br>
+                <input type="password" name="password" required><br>
+                <label for="file">Upload PDF:</label><br>
+                <input type="file" name="file" accept=".pdf" required><br>
+                <h4>Edit Metadata</h4>
+                {% if 'title' in metadata %}
+                    <label for="title">Title:</label><br>
+                    <input type="text" name="title" value="{{ metadata.title }}" required><br>
+                    <label for="author">Author:</label><br>
+                    <input type="text" name="author" value="{{ metadata.author }}"><br>
+                    <label for="creator">Creator:</label><br>
+                    <input type="text" name="creator" value="{{ metadata.creator }}"><br>
+                    <label for="producer">Producer:</label><br>
+                    <input type="text" name="producer" value="{{ metadata.producer }}"><br>
+                    <label for="subject">Subject:</label><br>
+                    <input type="text" name="subject" value="{{ metadata.subject }}"><br>
+                {% endif %}
+                <input type="submit" name="submit" value="Edit and Process">
+            </form>
+            <h4>Generated Seals</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>16-Character Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc.title }}</td>
+                            <td>{{ doc.creation_date or doc.date }}</td>
+                            <td>{{ doc.code }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="/static/scripts.js"></script>
+</body>
+</html>

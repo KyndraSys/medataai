@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDATA.ai - Verify Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Liberation+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MEDATA.ai</div>
+        <ul>
+            <li><a href="/">Upload</a></li>
+            <li><a href="/verify" class="active">Verify</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h2>Get verified with our MEDATA.ai wizard, just drop your PDF to verify authenticity.</h2>
+        <div class="verify-section">
+            <h3>Verify Document</h3>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="error">
+                        {% for message in messages %}
+                            {{ message }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <h4>Option 1: Enter Code</h4>
+            <form method="post">
+                <label for="code">Enter 16-Character Code:</label><br>
+                <input type="text" name="code" maxlength="16"><br>
+                <input type="submit" value="Verify">
+            </form>
+            <h4>Option 2: Upload PDF</h4>
+            <form method="post" enctype="multipart/form-data">
+                <label for="file">Upload Received PDF:</label><br>
+                <input type="file" name="file" accept=".pdf"><br>
+                <input type="submit" value="Verify">
+            </form>
+            {% if metadata %}
+                <div class="metadata">
+                    <h3>Document Metadata</h3>
+                    <p><strong>Title:</strong> {{ metadata.title }}</p>
+                    <p><strong>Author:</strong> {{ metadata.author }}</p>
+                    <p><strong>Creator:</strong> {{ metadata.creator }}</p>
+                    <p><strong>Producer:</strong> {{ metadata.producer }}</p>
+                    <p><strong>Subject:</strong> {{ metadata.subject }}</p>
+                    <p><strong>Creation Date:</strong> {{ metadata.creation_date }}</p>
+                    <p><strong>Modification Date:</strong> {{ metadata.modification_date }}</p>
+                    <p><strong>Signature:</strong> {{ metadata.signature }}</p>
+                    <p><strong>Document ID:</strong> {{ metadata.document_id }}</p>
+                    <p><strong>Verification Status:</strong> {{ metadata.verification_status }}</p>
+                    {% if metadata.page_count %}
+                        <p><strong>Page Count:</strong> {{ metadata.page_count }}</p>
+                    {% endif %}
+                    {% if metadata.text_length %}
+                        <p><strong>Text Length:</strong> {{ metadata.text_length }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script src="/static/scripts.js"></script>
+</body>
+</html>
