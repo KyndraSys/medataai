@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDATA.ai</title>
+    <link href="https://fonts.googleapis.com/css2?family=Liberation+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Liberation Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #ff0000;
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .navbar ul li {
+            margin-left: 20px;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .navbar ul li a.active {
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2, h3, h4 {
+            color: #333;
+        }
+        .upload-section, .verify-section {
+            margin-bottom: 40px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        input[type="submit"] {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        input[type="submit"]:hover {
+            background-color: #e60000;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .metadata {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff0000;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MEDATA.ai</div>
+        <ul>
+            <li><a href="#upload" class="active">Upload</a></li>
+            <li><a href="#verify">Verify</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h2>Get verified with our MEDATA.ai wizard, just drop your PDF to verify authenticity.</h2>
+        <div class="upload-section" id="upload">
+            <h3>Upload Document (Admin Only)</h3>
+            <div id="upload-error" class="error"></div>
+            <form id="upload-form" enctype="multipart/form-data">
+                <label for="password">Admin Password:</label>
+                <input type="password" id="password" name="password" required><br>
+                <label for="file">Upload PDF:</label>
+                <input type="file" id="file" name="file" accept=".pdf" required><br>
+                <h4>Edit Metadata</h4>
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title"><br>
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author"><br>
+                <label for="creator">Creator:</label>
+                <input type="text" id="creator" name="creator"><br>
+                <label for="producer">Producer:</label>
+                <input type="text" id="producer" name="producer"><br>
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject"><br>
+                <input type="submit" value="Edit and Process">
+            </form>
+            <h4>Generated Seals</h4>
+            <table id="seals-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>16-Character Code</th>
+                    </tr>
+                </thead>
+                <tbody id="seals-table-body"></tbody>
+            </table>
+        </div>
+        <div class="verify-section" id="verify">
+            <h3>Verify Document</h3>
+            <div id="verify-error" class="error"></div>
+            <h4>Option 1: Enter Code</h4>
+            <form id="verify-code-form">
+                <label for="code">Enter 16-Character Code:</label>
+                <input type="text" id="code" name="code" maxlength="16"><br>
+                <input type="submit" value="Verify">
+            </form>
+            <h4>Option 2: Upload PDF</h4>
+            <form id="verify-file-form" enctype="multipart/form-data">
+                <label for="verify-file">Upload Received PDF:</label>
+                <input type="file" id="verify-file" name="file" accept=".pdf"><br>
+                <input type="submit" value="Verify">
+            </form>
+            <div id="metadata" class="metadata" style="display: none;">
+                <h3>Document Metadata</h3>
+                <p><strong>Title:</strong> <span id="meta-title"></span></p>
+                <p><strong>Author:</strong> <span id="meta-author"></span></p>
+                <p><strong>Creator:</strong> <span id="meta-creator"></span></p>
+                <p><strong>Producer:</strong> <span id="meta-producer"></span></p>
+                <p><strong>Subject:</strong> <span id="meta-subject"></span></p>
+                <p><strong>Creation Date:</strong> <span id="meta-creation-date"></span></p>
+                <p><strong>Modification Date:</strong> <span id="meta-modification-date"></span></p>
+                <p><strong>Signature:</strong> <span id="meta-signature"></span></p>
+                <p><strong>Document ID:</strong> <span id="meta-document-id"></span></p>
+                <p><strong>Verification Status:</strong> <span id="meta-verification-status"></span></p>
+                <p><strong>Page Count:</strong> <span id="meta-page-count"></span></p>
+                <p><strong>Text Length:</strong> <span id="meta-text-length"></span></p>
+            </div>
+        </div>
+        <div class="history-section">
+            <h3>Verification History</h3>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Code</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            formData.append("title", document.getElementById("title").value || "");
+            formData.append("author", document.getElementById("author").value || "");
+            formData.append("creator", document.getElementById("creator").value || "");
+            formData.append("producer", document.getElementById("producer").value || "");
+            formData.append("subject", document.getElementById("subject").value || "");
+            
+            try {
+                const response = await fetch("/.netlify/functions/upload", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.error) {
+                    document.getElementById("upload-error").innerText = result.error;
+                } else {
+                    document.getElementById("upload-error").innerText = "Seal generated successfully!";
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${result.metadata.title}</td><td>${result.metadata.creation_date || new Date().toISOString()}</td><td>${result.code}</td>`;
+                    document.getElementById("seals-table-body").appendChild(row);
+                    window.location.href = result.output_path;
+                }
+            } catch (err) {
+                document.getElementById("upload-error").innerText = "Error uploading file";
+            }
+        });
+
+        document.getElementById("verify-code-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch("/.netlify/functions/verify", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                displayMetadata(result);
+            } catch (err) {
+                document.getElementById("verify-error").innerText = "Error verifying code";
+            }
+        });
+
+        document.getElementById("verify-file-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch("/.netlify/functions/verify", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                displayMetadata(result);
+            } catch (err) {
+                document.getElementById("verify-error").innerText = "Error verifying file";
+            }
+        });
+
+        async function loadHistory() {
+            try {
+                const response = await fetch("/.netlify/functions/history");
+                const history = await response.json();
+                const tbody = document.getElementById("history-table-body");
+                history.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${item.title}</td><td>${item.code}</td><td>${item.timestamp}</td>`;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Error loading history:", err);
+            }
+        }
+
+        function displayMetadata(data) {
+            if (data.error) {
+                document.getElementById("verify-error").innerText = data.error;
+                document.getElementById("metadata").style.display = "none";
+                return;
+            }
+            document.getElementById("verify-error").innerText = "";
+            document.getElementById("meta-title").innerText = data.title;
+            document.getElementById("meta-author").innerText = data.author || "";
+            document.getElementById("meta-creator").innerText = data.creator || "";
+            document.getElementById("meta-producer").innerText = data.producer || "";
+            document.getElementById("meta-subject").innerText = data.subject || "";
+            document.getElementById("meta-creation-date").innerText = data.creation_date || "";
+            document.getElementById("meta-modification-date").innerText = data.modification_date || "";
+            document.getElementById("meta-signature").innerText = data.signature;
+            document.getElementById("meta-document-id").innerText = data.document_id;
+            document.getElementById("meta-verification-status").innerText = data.verification_status;
+            document.getElementById("meta-page-count").innerText = data.page_count || "";
+            document.getElementById("meta-text-length").innerText = data.text_length || "";
+            document.getElementById("metadata").style.display = "block";
+            loadHistory();
+        }
+
+        window.onload = loadHistory;
+    </script>
+</body>
+</html>
